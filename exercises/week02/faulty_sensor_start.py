@@ -68,7 +68,7 @@ class FaultTolerantAgent:
         # TODO: implementeer dit
         if abs(a-b) <= self.TOLERANCE:
             hoogte = (a+b)/2
-        if self.vorige_hoogte is None:
+        elif self.vorige_hoogte is None:
             hoogte = a
         else:
             if abs(a-self.vorige_hoogte) < abs(b-self.vorige_hoogte):
@@ -80,7 +80,6 @@ class FaultTolerantAgent:
                 if self.verdachte is None:
                     self.verdachte = a
 
-        self.vorige_hoogte = hoogte
         return hoogte
 
     def process(self, p: Reading):
@@ -88,6 +87,13 @@ class FaultTolerantAgent:
         #       de vorige waarde) en vraag correctie aan als de daling
         #       sneller is dan DESCENT_LIMIT. Vergeet de interne state
         #       niet bij te werken.
+        metingen = self.read_all(p)
+        hoogte = self.reliable_value(metingen[0],metingen[1],self.vorige_hoogte)  
+        if self.vorige_hoogte is not None and hoogte - self.vorige_hoogte < self.DESCENT_LIMIT:
+               self.vorige_hoogte = hoogte
+               return Correct()
+        
+        self.vorige_hoogte = hoogte
         return Nothing()
 
 
