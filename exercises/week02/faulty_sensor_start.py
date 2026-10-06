@@ -48,12 +48,15 @@ class FaultTolerantAgent:
         # TODO: interne state — welke variabelen heb je nodig?
         self.vorige_hoogte = None
         self.verdachte = None
+        self.previous_value = None
+        self.suspected_sensor = None
 
     def read_all(self, p: Reading) -> tuple[float, float]:
         """Sensors: geef beide metingen terug."""
         # TODO
         metingen = (p.sensor_a,p.sensor_b)
         return metingen
+        return (p.sensor_a, p.sensor_b)
 
     def reliable_value(self, a: float, b: float, previous: Optional[float]) -> float:
         """Sensor model: bepaal de meest betrouwbare hoogtemeting.
@@ -82,6 +85,21 @@ class FaultTolerantAgent:
 
         return hoogte
 
+        if abs(a - b) < self.TOLERANCE : 
+            # betrouwbaar
+            self.suspected_sensor = None
+            return (a+b)/2
+        else:
+            # er is een niet betrouwbare sensor
+            if abs(a - self.previous_value) < abs(b - self.previous_value):
+                self.suspected_sensor = 'b'
+                return 'a'
+            else:
+                self.suspected_sensor = 'a'
+                return 'b'
+
+
+
     def process(self, p: Reading):
         # TODO: kies de betrouwbare meting, bepaal de trend (delta t.o.v.
         #       de vorige waarde) en vraag correctie aan als de daling
@@ -94,6 +112,18 @@ class FaultTolerantAgent:
                return Correct()
         
         self.vorige_hoogte = hoogte
+        a,b = self.read_all()
+        reliable_value = self.reliable_value(a,b)
+
+        #eerste keer: self.previous = None
+        if self.previous_value is None:
+            self.previous_value = reliable_value
+            return Nothing()
+
+        delta = reliable_value - self.previous_value # bij daling wil je een negatief getal
+        self.previous_value = reliable_value
+        if delta < self.DESCENT_LIMIT:
+            return Correct()
         return Nothing()
 
 

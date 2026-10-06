@@ -1,5 +1,5 @@
 """
-Oefening 3: Sliding Puzzle (8-puzzle)
+Oefening 2: Sliding Puzzle (8-puzzle)
 ======================================
 Implementeer de sliding puzzle en los hem op met BFS/DFS.
 """
@@ -21,7 +21,22 @@ class SlidingPuzzle:
 
     def possible_new_configurations(self):
         # TODO: geef alle nieuwe configuraties door het lege vakje te verschuiven
-        return []
+        plaats_nul = self.locate_empty()
+        mogelijke_richtingen =  [(-1,0),(1,0),(0,-1),(0,1)]
+
+        
+        lijst_puzzels = []
+        for rij, kolom in mogelijke_richtingen:
+            nieuwe_rij = plaats_nul[0] + rij
+            nieuwe_kolom = plaats_nul[1] + kolom
+
+            if 0 <= nieuwe_rij < self.GRIDSIZE and 0<= nieuwe_kolom < self.GRIDSIZE:
+                puzzel = self.duplicate()
+                getal_swap = puzzel.Game[nieuwe_rij][nieuwe_kolom]
+                puzzel.Game[nieuwe_rij][nieuwe_kolom] = 0
+                puzzel.Game[plaats_nul[0]][plaats_nul[1]] = getal_swap
+                lijst_puzzels.append(puzzel)
+        return lijst_puzzels
 
     def locate_empty(self):
         for row in range(self.GRIDSIZE):
@@ -32,6 +47,15 @@ class SlidingPuzzle:
 
     def manhattan_distance(self):
         # TODO: bereken de Manhattan-afstand tot de goal-configuratie
+        rij_vakje = 0
+        kolom_vakje = 0
+        for rij in self.Game:
+            for vakje in rij:
+                rij_orginal = vakje//3
+                kolom_orginal = vakje%3
+                cost = abs(rij_orginal - rij_vakje) + abs(kolom_orginal - kolom_vakje)
+                kolom_vakje +=1
+        rij_vakje +=1
         return 0
 
     def is_goal(self):
