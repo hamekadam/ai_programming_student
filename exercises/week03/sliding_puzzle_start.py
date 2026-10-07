@@ -4,8 +4,7 @@ Oefening 2: Sliding Puzzle (8-puzzle)
 Implementeer de sliding puzzle en los hem op met BFS/DFS.
 """
 import numpy as np
-
-
+from collections import deque
 class SlidingPuzzle:
     GRIDSIZE = 3
     EMPTY = 0
@@ -47,16 +46,17 @@ class SlidingPuzzle:
 
     def manhattan_distance(self):
         # TODO: bereken de Manhattan-afstand tot de goal-configuratie
-        rij_vakje = 0
-        kolom_vakje = 0
-        for rij in self.Game:
-            for vakje in rij:
-                rij_orginal = vakje//3
-                kolom_orginal = vakje%3
-                cost = abs(rij_orginal - rij_vakje) + abs(kolom_orginal - kolom_vakje)
-                kolom_vakje +=1
-        rij_vakje +=1
-        return 0
+        
+        totaal_cost = 0
+        for rij in range(self.GRIDSIZE):
+            for kolom in range(self.GRIDSIZE):
+                getal = self.Game[rij][kolom]
+                if getal !=0:
+                    rij_orginal = (getal-1)//3
+                    kolom_orginal = (getal-1)%3
+                    cost = abs(rij_orginal - rij) + abs(kolom_orginal - kolom)
+                    totaal_cost+=cost
+        return totaal_cost
 
     def is_goal(self):
         return np.array_equal(self.Game, self.GOAL)
@@ -73,7 +73,36 @@ class SlidingPuzzle:
 
 def solve_puzzle(start_puzzle):
     # TODO: los de puzzel op met BFS
-    pass
+    
+    if start_puzzle.is_goal():
+        return start_puzzle
+    frontier = deque([start_puzzle])
+    visited = set([str(start_puzzle.Game)])
+    pad = {}
+    while len(frontier) > 0:
+        huidige_puzzel = frontier.popleft()
+        mogelijkheden = huidige_puzzel.possible_new_configurations()
+        for puzzel in mogelijkheden:
+            is_the_goal = puzzel.is_goal()
+            if is_the_goal:
+                defini_pad = [str(puzzel.Game)]
+                vader = str(huidige_puzzel.Game)
+                defini_pad.append(vader)
+                while vader != str(start_puzzle.Game):
+                    grootvader = pad[vader]
+                    defini_pad.append(grootvader)
+                    vader = grootvader
+                    
+                return defini_pad
+
+
+            if str(puzzel.Game) not in visited:
+                pad[str(puzzel.Game)] = str(huidige_puzzel.Game)
+                visited.add(str(puzzel.Game))
+                frontier.append(puzzel)
+            
+            
+        
 
 
 if __name__ == "__main__":
@@ -86,5 +115,5 @@ if __name__ == "__main__":
     print("Startconfiguratie:")
     puzzle.log()
 
-    # oplossing = solve_puzzle(puzzle)
-    # print("Oplossing:", oplossing)
+    oplossing = solve_puzzle(puzzle)
+    print("Oplossing:", oplossing)

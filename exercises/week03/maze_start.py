@@ -20,7 +20,14 @@ class Maze:
 
     def valid_moves(self, current):
         # TODO: geef lijst van (rij,kolom)-coördinaten die geldig zijn
-        pass
+        mogelijkheden = [(-1,0),(1,0),(0,-1),(0,1)]
+        eind_lijst = []
+        for rij,kolom in mogelijkheden:
+            move_rij = current[0] + rij
+            move_kolom = current[1] + kolom
+            if 0 <= move_rij < self.size[0] and 0 <= move_kolom < self.size[1] and self.maze[move_rij][move_kolom]!= "#":
+                eind_lijst.append((move_rij,move_kolom))
+        return eind_lijst
 
     def extract_path(self, stack):
         # TODO: haal het pad uit de stack van start tot end
@@ -33,7 +40,21 @@ class Maze:
 
 def find_path(maze):
     # TODO: implementeer DFS met een stack
-    pass
+    if maze.start == maze.end:
+        return "zelfde start en end"
+    
+    frontier = [(maze.start, [maze.start])]
+    visited = set([maze.start])
+    while len(frontier) > 0:
+        huidige_maze, route = frontier.pop()
+        kinderen = maze.valid_moves(huidige_maze)
+        for kind in kinderen:
+            nieuwe_route = route + [kind]
+            if kind == maze.end:
+                return nieuwe_route, len(nieuwe_route)
+            if kind not in visited:
+                visited.add(kind)
+                frontier.append((kind, nieuwe_route))
 
 
 if __name__ == "__main__":
