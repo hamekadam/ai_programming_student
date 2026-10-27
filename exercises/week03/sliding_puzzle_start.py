@@ -79,8 +79,11 @@ def solve_puzzle(start_puzzle):
     frontier = deque([start_puzzle])
     visited = set([str(start_puzzle.Game)])
     pad = {}
+    teller = 0
     while len(frontier) > 0:
+        teller +=1
         huidige_puzzel = frontier.popleft()
+
         mogelijkheden = huidige_puzzel.possible_new_configurations()
         for puzzel in mogelijkheden:
             is_the_goal = puzzel.is_goal()
@@ -92,15 +95,16 @@ def solve_puzzle(start_puzzle):
                     grootvader = pad[vader]
                     defini_pad.append(grootvader)
                     vader = grootvader
-                    
+                print(teller)    
                 return defini_pad
 
 
             if str(puzzel.Game) not in visited:
                 pad[str(puzzel.Game)] = str(huidige_puzzel.Game)
                 visited.add(str(puzzel.Game))
+
                 frontier.append(puzzel)
-            
+        
             
         
 

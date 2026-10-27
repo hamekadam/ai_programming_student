@@ -67,10 +67,9 @@ class Problem:
 
 
 class Path:
-    def __init__(self, initial_state):
-        self.Nodes = [initial_state]
-        self.LeafNode = initial_state
-        self.Cost = 0
+    def __init__(self, tuple):
+        self.Nodes = tuple[2]
+        self.Cost = tuple[0]
 
     def __str__(self):
         node_names = [n.State.Name for n in self.Nodes]
@@ -79,7 +78,27 @@ class Path:
 
 def dijkstra(problem):
     # TODO: implementeer Dijkstra met een priority queue (heapq)
-    pass
+    initial_node = problem.InitialState
+    goal_node = problem.GoalState
+    frontier = [(0,0,[initial_node])]
+    visited = set()
+    route_nummer = 1
+
+    while len(frontier) > 0:
+        current_tuple = heapq.heappop(frontier)
+        last_node = current_tuple[2][-1]
+        if last_node not in visited:
+            visited.add(last_node)
+            if last_node == goal_node:
+                return Path(current_tuple)
+            
+            for edge in last_node.Actions:
+                heapq.heappush(frontier,(current_tuple[0]+edge.Cost, route_nummer, current_tuple[2] + [edge.ToNode]))
+                route_nummer += 1
+        
+            
+        
+
 
 
 # Maak een testgraafbestand aan
