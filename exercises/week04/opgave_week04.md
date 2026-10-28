@@ -59,6 +59,7 @@ distance_matrix = np.array([
     [20, 15, 0, 25],
     [21, 18, 25, 0]
 ])
-```
 
-Verwachte totale afstand (voorbeeld): ~86 (controleer of jouw oplossing dicht bij het optimum zit).
+
+'Verwachte totale afstand (voorbeeld): ~86 (controleer of jouw oplossing dicht bij het optimum zit).'
+
