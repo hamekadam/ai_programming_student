@@ -33,7 +33,6 @@ Bekijk de code die het spel Othello implementeert (Digitap `othello_opgave.py`).
     - lorem
     - ipsum
     - dolor
-   
 # The Monty Hall Problem
 Het Monty Hall probleem is een puzzel gabaseerd op een Amerikaanse spelshow uit de jaren '50. Op Wikipedia (https://nl.wikipedia.org/wiki/Driedeurenprobleem) kan je lezen: Stel dat je deelneemt aan een spelprogramma en je mag kiezen uit drie deuren: achter een van de deuren staat een auto, achter de andere twee staan geiten. Je kiest een deur, zeg nr. 1, en de presentator, die weet wat er achter de deuren staat, opent een andere deur, zeg nr. 3, met een geit erachter. Hij zegt dan tegen je: "Zou je deur nr. 2 willen kiezen?" Is het in je voordeel om van deur te wisselen? 
 
